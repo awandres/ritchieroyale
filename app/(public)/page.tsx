@@ -1,6 +1,8 @@
 import Intro from "@/components/Intro";
 import { db } from "@/lib/db";
 
+export const dynamic = 'force-dynamic';
+
 export default async function HomePage() {
   // Fetch upcoming shows for homepage
   const upcomingShows = await db.show.findMany({
