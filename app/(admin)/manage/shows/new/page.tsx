@@ -1,39 +1,24 @@
 import { db } from "@/lib/db";
-import { redirect } from "next/navigation";
 import Link from "next/link";
+import { createShow } from "../actions";
 
 export const dynamic = 'force-dynamic';
 
-export default async function NewShowPage() {
-  const cities = await db.city.findMany({
-    orderBy: {
-      name: "asc",
-    },
-  });
-
-  async function createShow(formData: FormData) {
-    "use server";
-
-    const venue = formData.get("venue") as string;
-    const date = formData.get("date") as string;
-    const cityId = formData.get("cityId") as string;
-    const ticketUrl = formData.get("ticketUrl") as string;
-    const notes = formData.get("notes") as string;
-    const isPublic = formData.get("isPublic") === "on";
-
-    await db.show.create({
-      data: {
-        venue,
-        date: new Date(date),
-        cityId,
-        ticketUrl: ticketUrl || null,
-        notes: notes || null,
-        isPublic,
+async function getCities() {
+  try {
+    return await db.city.findMany({
+      orderBy: {
+        name: "asc",
       },
     });
-
-    redirect("/admin/manage/shows");
+  } catch (error) {
+    console.error("Failed to fetch cities:", error);
+    return [];
   }
+}
+
+export default async function NewShowPage() {
+  const cities = await getCities();
 
   return (
     <div className="max-w-2xl">
@@ -161,4 +146,3 @@ export default async function NewShowPage() {
     </div>
   );
 }
-

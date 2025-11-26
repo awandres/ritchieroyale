@@ -3,15 +3,24 @@ import Link from "next/link";
 
 export const dynamic = 'force-dynamic';
 
+async function getShows() {
+  try {
+    return await db.show.findMany({
+      include: {
+        city: true,
+      },
+      orderBy: {
+        date: "desc",
+      },
+    });
+  } catch (error) {
+    console.error("Failed to fetch shows:", error);
+    return [];
+  }
+}
+
 export default async function AdminShowsPage() {
-  const shows = await db.show.findMany({
-    include: {
-      city: true,
-    },
-    orderBy: {
-      date: "desc",
-    },
-  });
+  const shows = await getShows();
 
   return (
     <div className="space-y-6">
@@ -108,4 +117,3 @@ export default async function AdminShowsPage() {
     </div>
   );
 }
-

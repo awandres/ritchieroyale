@@ -3,23 +3,31 @@ import { db } from "@/lib/db";
 
 export const dynamic = 'force-dynamic';
 
-export default async function HomePage() {
-  // Fetch upcoming shows for homepage
-  const upcomingShows = await db.show.findMany({
-    where: {
-      isPublic: true,
-      date: {
-        gte: new Date(),
+async function getUpcomingShows() {
+  try {
+    return await db.show.findMany({
+      where: {
+        isPublic: true,
+        date: {
+          gte: new Date(),
+        },
       },
-    },
-    include: {
-      city: true,
-    },
-    orderBy: {
-      date: "asc",
-    },
-    take: 3,
-  });
+      include: {
+        city: true,
+      },
+      orderBy: {
+        date: "asc",
+      },
+      take: 3,
+    });
+  } catch (error) {
+    console.error("Failed to fetch shows:", error);
+    return [];
+  }
+}
+
+export default async function HomePage() {
+  const upcomingShows = await getUpcomingShows();
 
   return (
     <>
@@ -69,14 +77,6 @@ export default async function HomePage() {
                   )}
                 </div>
               ))}
-                        <section className="mb-16">
-          <h2 className="text-3xl font-bold text-center mb-8 text-rr-yellow">
-              Upcoming Shows
-            </h2>
-            <h2 className="text-3xl font-bold text-center mb-8 text-rr-yellow">
-              No upcoming shows scheduled. Check back soon!
-            </h2>
-          </section>
             </div>
           </section>
         )}
@@ -84,4 +84,3 @@ export default async function HomePage() {
     </>
   );
 }
-

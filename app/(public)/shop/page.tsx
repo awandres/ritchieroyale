@@ -3,18 +3,27 @@ import Image from "next/image";
 
 export const dynamic = 'force-dynamic';
 
+async function getProducts() {
+  try {
+    return await db.product.findMany({
+      where: {
+        isActive: true,
+      },
+      include: {
+        variants: true,
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+  } catch (error) {
+    console.error("Failed to fetch products:", error);
+    return [];
+  }
+}
+
 export default async function ShopPage() {
-  const products = await db.product.findMany({
-    where: {
-      isActive: true,
-    },
-    include: {
-      variants: true,
-    },
-    orderBy: {
-      createdAt: "desc",
-    },
-  });
+  const products = await getProducts();
 
   return (
     <div className="container mx-auto px-4 py-12">
@@ -66,4 +75,3 @@ export default async function ShopPage() {
     </div>
   );
 }
-

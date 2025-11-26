@@ -2,21 +2,30 @@ import { db } from "@/lib/db";
 
 export const dynamic = 'force-dynamic';
 
-export default async function ShowsPage() {
-  const shows = await db.show.findMany({
-    where: {
-      isPublic: true,
-      date: {
-        gte: new Date(),
+async function getShows() {
+  try {
+    return await db.show.findMany({
+      where: {
+        isPublic: true,
+        date: {
+          gte: new Date(),
+        },
       },
-    },
-    include: {
-      city: true,
-    },
-    orderBy: {
-      date: "asc",
-    },
-  });
+      include: {
+        city: true,
+      },
+      orderBy: {
+        date: "asc",
+      },
+    });
+  } catch (error) {
+    console.error("Failed to fetch shows:", error);
+    return [];
+  }
+}
+
+export default async function ShowsPage() {
+  const shows = await getShows();
 
   return (
     <div className="container mx-auto px-4 py-12">
@@ -65,4 +74,3 @@ export default async function ShowsPage() {
     </div>
   );
 }
-

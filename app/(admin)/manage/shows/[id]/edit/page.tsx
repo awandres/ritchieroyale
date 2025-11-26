@@ -1,7 +1,7 @@
 import { db } from "@/lib/db";
-import { redirect } from "next/navigation";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { updateShow } from "../../actions";
 
 export const dynamic = 'force-dynamic';
 
@@ -9,50 +9,46 @@ export async function generateStaticParams() {
   return [];
 }
 
+async function getShow(id: string) {
+  try {
+    return await db.show.findUnique({
+      where: { id },
+      include: { city: true },
+    });
+  } catch (error) {
+    console.error("Failed to fetch show:", error);
+    return null;
+  }
+}
+
+async function getCities() {
+  try {
+    return await db.city.findMany({
+      orderBy: {
+        name: "asc",
+      },
+    });
+  } catch (error) {
+    console.error("Failed to fetch cities:", error);
+    return [];
+  }
+}
+
 export default async function EditShowPage({
   params,
 }: {
   params: { id: string };
 }) {
-  const show = await db.show.findUnique({
-    where: { id: params.id },
-    include: { city: true },
-  });
+  const [show, cities] = await Promise.all([
+    getShow(params.id),
+    getCities(),
+  ]);
 
   if (!show) {
     notFound();
   }
 
-  const cities = await db.city.findMany({
-    orderBy: {
-      name: "asc",
-    },
-  });
-
-  async function updateShow(formData: FormData) {
-    "use server";
-
-    const venue = formData.get("venue") as string;
-    const date = formData.get("date") as string;
-    const cityId = formData.get("cityId") as string;
-    const ticketUrl = formData.get("ticketUrl") as string;
-    const notes = formData.get("notes") as string;
-    const isPublic = formData.get("isPublic") === "on";
-
-    await db.show.update({
-      where: { id: params.id },
-      data: {
-        venue,
-        date: new Date(date),
-        cityId,
-        ticketUrl: ticketUrl || null,
-        notes: notes || null,
-        isPublic,
-      },
-    });
-
-    redirect("/admin/manage/shows");
-  }
+  const updateShowWithId = updateShow.bind(null, params.id);
 
   // Format date for datetime-local input
   const formattedDate = new Date(show.date).toISOString().slice(0, 16);
@@ -70,7 +66,7 @@ export default async function EditShowPage({
 
       <h1 className="text-3xl font-bold mb-8 text-rr-yellow">Edit Show</h1>
 
-      <form action={updateShow} className="space-y-6">
+      <form action={updateShowWithId} className="space-y-6">
         <div className="bg-rr-dark/80 backdrop-blur-sm border-2 border-rr-green/30 rounded-lg p-6 space-y-6">
           <div>
             <label htmlFor="venue" className="block text-sm font-medium text-rr-green mb-2">
@@ -181,4 +177,3 @@ export default async function EditShowPage({
     </div>
   );
 }
-

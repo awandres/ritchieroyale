@@ -1,7 +1,7 @@
 import { db } from "@/lib/db";
-import { redirect } from "next/navigation";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { deleteShow } from "../../actions";
 
 export const dynamic = 'force-dynamic';
 
@@ -9,29 +9,30 @@ export async function generateStaticParams() {
   return [];
 }
 
+async function getShow(id: string) {
+  try {
+    return await db.show.findUnique({
+      where: { id },
+      include: { city: true },
+    });
+  } catch (error) {
+    console.error("Failed to fetch show:", error);
+    return null;
+  }
+}
+
 export default async function DeleteShowPage({
   params,
 }: {
   params: { id: string };
 }) {
-  const show = await db.show.findUnique({
-    where: { id: params.id },
-    include: { city: true },
-  });
+  const show = await getShow(params.id);
 
   if (!show) {
     notFound();
   }
 
-  async function deleteShow() {
-    "use server";
-
-    await db.show.delete({
-      where: { id: params.id },
-    });
-
-    redirect("/admin/manage/shows");
-  }
+  const deleteShowWithId = deleteShow.bind(null, params.id);
 
   return (
     <div className="max-w-2xl">
@@ -83,7 +84,7 @@ export default async function DeleteShowPage({
           </p>
         </div>
 
-        <form action={deleteShow} className="flex gap-4">
+        <form action={deleteShowWithId} className="flex gap-4">
           <button
             type="submit"
             className="flex-1 bg-rr-pink/20 border-2 border-rr-pink text-rr-pink px-6 py-3 rounded-lg hover:bg-red-500/30 hover:border-red-500 hover:text-red-400 transition-all font-semibold"
@@ -101,4 +102,3 @@ export default async function DeleteShowPage({
     </div>
   );
 }
-

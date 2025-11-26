@@ -2,18 +2,27 @@ import { db } from "@/lib/db";
 
 export const dynamic = 'force-dynamic';
 
+async function getSongs() {
+  try {
+    return await db.song.findMany({
+      where: {
+        isActive: true,
+      },
+      include: {
+        resources: true,
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+  } catch (error) {
+    console.error("Failed to fetch songs:", error);
+    return [];
+  }
+}
+
 export default async function MusicPage() {
-  const songs = await db.song.findMany({
-    where: {
-      isActive: true,
-    },
-    include: {
-      resources: true,
-    },
-    orderBy: {
-      createdAt: "desc",
-    },
-  });
+  const songs = await getSongs();
 
   return (
     <div className="container mx-auto px-4 py-12">
@@ -64,4 +73,3 @@ export default async function MusicPage() {
     </div>
   );
 }
-

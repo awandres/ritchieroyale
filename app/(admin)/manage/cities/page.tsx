@@ -1,53 +1,43 @@
 import { db } from "@/lib/db";
-import { redirect } from "next/navigation";
 import Link from "next/link";
+import { createCity, deleteCity } from "./actions";
 
 export const dynamic = 'force-dynamic';
 
-export default async function AdminCitiesPage() {
-  const cities = await db.city.findMany({
-    include: {
-      _count: {
-        select: {
-          shows: true,
-          members: true,
+type CityWithCount = {
+  id: string;
+  name: string;
+  state: string | null;
+  country: string;
+  _count: {
+    shows: number;
+    members: number;
+  };
+};
+
+async function getCities(): Promise<CityWithCount[]> {
+  try {
+    return await db.city.findMany({
+      include: {
+        _count: {
+          select: {
+            shows: true,
+            members: true,
+          },
         },
       },
-    },
-    orderBy: {
-      name: "asc",
-    },
-  });
-
-  async function createCity(formData: FormData) {
-    "use server";
-
-    const name = formData.get("name") as string;
-    const state = formData.get("state") as string;
-    const country = formData.get("country") as string;
-
-    await db.city.create({
-      data: {
-        name,
-        state: state || null,
-        country: country || "USA",
+      orderBy: {
+        name: "asc",
       },
     });
-
-    redirect("/admin/manage/cities");
+  } catch (error) {
+    console.error("Failed to fetch cities:", error);
+    return [];
   }
+}
 
-  async function deleteCity(formData: FormData) {
-    "use server";
-
-    const id = formData.get("id") as string;
-
-    await db.city.delete({
-      where: { id },
-    });
-
-    redirect("/admin/manage/cities");
-  }
+export default async function AdminCitiesPage() {
+  const cities = await getCities();
 
   return (
     <div className="space-y-6">
@@ -162,4 +152,3 @@ export default async function AdminCitiesPage() {
     </div>
   );
 }
-
