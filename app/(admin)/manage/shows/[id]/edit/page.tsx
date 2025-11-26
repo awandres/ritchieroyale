@@ -5,6 +5,10 @@ import { notFound } from "next/navigation";
 
 export const dynamic = 'force-dynamic';
 
+export async function generateStaticParams() {
+  return [];
+}
+
 export default async function EditShowPage({
   params,
 }: {
