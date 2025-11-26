@@ -94,19 +94,10 @@ export default async function AdminShowsPage() {
                       </span>
                     )}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
-                    <Link
-                      href={`/admin/manage/shows/${show.id}/edit`}
-                      className="text-rr-yellow hover:text-rr-pink transition-colors"
-                    >
-                      Edit
-                    </Link>
-                    <Link
-                      href={`/admin/manage/shows/${show.id}/delete`}
-                      className="text-rr-pink hover:text-red-400 transition-colors"
-                    >
-                      Delete
-                    </Link>
+                  <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                    <span className="text-rr-green/50 text-xs">
+                      Manage in Supabase
+                    </span>
                   </td>
                 </tr>
               ))}
