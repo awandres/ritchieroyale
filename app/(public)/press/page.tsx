@@ -8,7 +8,7 @@ export default async function PressPage() {
         <section className="bg-rr-dark/80 backdrop-blur-sm border-2 border-rr-green/30 rounded-lg p-8">
           <h2 className="text-2xl font-bold mb-4 text-rr-pink">About Ritchie Royale</h2>
           <p className="text-rr-green/80 leading-relaxed mb-4">
-            Ritchie Royale Rock N' Roll Revue - coming soon to a town near you!
+            Ritchie Royale Rock N&apos; Roll Revue - coming soon to a town near you!
           </p>
         </section>
 

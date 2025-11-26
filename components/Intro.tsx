@@ -11,7 +11,7 @@ export default function Intro() {
           Ritchie Royale
         </h1>
         <p className="text-xl md:text-2xl text-rr-green mb-8 max-w-2xl mx-auto drop-shadow-lg">
-          Ritchie Royale's Rock N' Roll Revue - Coming soon to a town near you
+          Ritchie Royale&apos;s Rock N&apos; Roll Revue - Coming soon to a town near you
         </p>
         <a
           href="#header"

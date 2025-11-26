@@ -1,4 +1,5 @@
 import { db } from "@/lib/db";
+import Image from "next/image";
 
 export default async function ShopPage() {
   const products = await db.product.findMany({
@@ -28,11 +29,14 @@ export default async function ShopPage() {
               className="bg-rr-dark/80 backdrop-blur-sm border-2 border-rr-green/30 rounded-lg overflow-hidden hover:border-rr-pink/50 transition-all hover:shadow-lg hover:shadow-rr-green/20"
             >
               {product.images.length > 0 && (
-                <img
-                  src={product.images[0]}
-                  alt={product.name}
-                  className="w-full h-64 object-cover"
-                />
+                <div className="relative w-full h-64">
+                  <Image
+                    src={product.images[0]}
+                    alt={product.name}
+                    fill
+                    className="object-cover"
+                  />
+                </div>
               )}
               <div className="p-6">
                 <h2 className="text-2xl font-bold mb-2 text-rr-green">{product.name}</h2>

@@ -28,7 +28,7 @@ export default async function HomePage() {
             Ritchie Royale
           </h1>
           <p className="text-xl text-rr-green/90 max-w-2xl mx-auto drop-shadow-md">
-           Rock N' Roll Revue!
+           Rock N&apos; Roll Revue!
           </p>
         </section>
 
