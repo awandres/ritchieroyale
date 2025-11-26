@@ -1,0 +1,207 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["driverAdapters"]
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+enum Role {
+  ADMIN
+  MEMBER
+  PUBLIC
+}
+
+enum ResourceType {
+  AUDIO_REFERENCE
+  AUDIO_STEM
+  AUDIO_PRACTICE
+  TAB
+  CHORD_CHART
+  SHEET_MUSIC
+  OTHER
+}
+
+enum ProductCategory {
+  APPAREL
+  MUSIC
+  POSTER
+  ACCESSORY
+  DIGITAL
+}
+
+enum OrderStatus {
+  PENDING
+  PAID
+  FULFILLED
+  SHIPPED
+  DELIVERED
+  CANCELLED
+}
+
+model User {
+  id           String    @id @default(cuid())
+  email        String    @unique
+  passwordHash String?
+  role         Role      @default(PUBLIC)
+  member       Member?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+}
+
+model Member {
+  id          String      @id @default(cuid())
+  userId      String      @unique
+  user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  displayName String
+  city        City        @relation(fields: [cityId], references: [id])
+  cityId      String
+  instruments String[]
+  bio         String?
+  isActive    Boolean     @default(true)
+  agreements  Agreement[]
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+}
+
+model City {
+  id       String   @id @default(cuid())
+  name     String
+  state    String?
+  country  String   @default("USA")
+  members  Member[]
+  shows    Show[]
+  createdAt DateTime @default(now())
+}
+
+model Song {
+  id           String          @id @default(cuid())
+  title        String
+  key          String?
+  tempo        Int?
+  structure    Json? // Array of sections
+  lyrics       String?
+  notes        String?
+  isActive     Boolean         @default(true)
+  resources    SongResource[]
+  setlistItems SetlistItem[]
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime        @updatedAt
+}
+
+model SongResource {
+  id       String       @id @default(cuid())
+  songId   String
+  song     Song         @relation(fields: [songId], references: [id], onDelete: Cascade)
+  type     ResourceType
+  name     String
+  url      String // R2 or external URL
+  mimeType String?
+  createdAt DateTime    @default(now())
+}
+
+model Show {
+  id        String    @id @default(cuid())
+  date      DateTime
+  venue     String
+  city      City      @relation(fields: [cityId], references: [id])
+  cityId    String
+  ticketUrl String?
+  notes     String?
+  isPublic  Boolean   @default(true)
+  setlist   Setlist?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model Setlist {
+  id      String        @id @default(cuid())
+  showId  String        @unique
+  show    Show          @relation(fields: [showId], references: [id], onDelete: Cascade)
+  name    String?
+  items   SetlistItem[]
+  createdAt DateTime    @default(now())
+}
+
+model SetlistItem {
+  id        String   @id @default(cuid())
+  setlistId String
+  setlist   Setlist  @relation(fields: [setlistId], references: [id], onDelete: Cascade)
+  songId    String
+  song      Song     @relation(fields: [songId], references: [id])
+  position  Int
+  notes     String?
+  createdAt DateTime @default(now())
+}
+
+model Agreement {
+  id           String    @id @default(cuid())
+  memberId     String
+  member       Member    @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  title        String
+  content      String // Markdown or HTML
+  signedAt     DateTime?
+  signatureUrl String?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+}
+
+model Product {
+  id          String          @id @default(cuid())
+  name        String
+  description String?
+  price       Int // Cents
+  images      String[]
+  category    ProductCategory
+  isActive    Boolean         @default(true)
+  variants    ProductVariant[]
+  orderItems  OrderItem[]
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+}
+
+model ProductVariant {
+  id         String      @id @default(cuid())
+  productId  String
+  product    Product     @relation(fields: [productId], references: [id], onDelete: Cascade)
+  name       String // e.g., "Large / Black"
+  sku        String      @unique
+  stock      Int         @default(0)
+  orderItems OrderItem[]
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+}
+
+model Order {
+  id              String      @id @default(cuid())
+  email           String
+  stripePaymentId String?
+  status          OrderStatus @default(PENDING)
+  subtotal        Int
+  shipping        Int         @default(0)
+  total           Int
+  shippingAddress Json
+  items           OrderItem[]
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+}
+
+model OrderItem {
+  id        String          @id @default(cuid())
+  orderId   String
+  order     Order           @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId String
+  product   Product         @relation(fields: [productId], references: [id])
+  variantId String?
+  variant   ProductVariant? @relation(fields: [variantId], references: [id])
+  quantity  Int
+  unitPrice Int
+  createdAt DateTime        @default(now())
+}
+

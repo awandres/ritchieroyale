@@ -1,0 +1,58 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* RR Brand Colors */
+    --background: #334143; /* Dark Green */
+    --foreground: #B3ECC8; /* Neon Green */
+    --rr-yellow: #F6F792;
+    --rr-green: #B3ECC8;
+    --rr-pink: #FEABC3;
+    --rr-dark: #334143;
+  }
+
+  body {
+    @apply bg-rr-dark text-rr-green;
+    font-feature-settings: "rlig" 1, "calt" 1;
+    background-image: 
+      linear-gradient(rgba(51, 65, 67, 0.85), rgba(51, 65, 67, 0.85)),
+      url('/rr-logo.png');
+    background-size: cover, contain;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-color: #334143;
+  }
+}
+
+/* Custom styles inspired by themilestones design */
+@layer components {
+  .fade-in {
+    animation: fadeIn 0.5s ease-in;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  .img-responsive {
+    @apply max-w-full;
+  }
+
+  .margin-auto {
+    @apply mx-auto;
+  }
+
+  /* Break styling */
+  .break {
+    @apply w-[70%] my-12 mx-auto;
+  }
+}
+
