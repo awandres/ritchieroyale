@@ -1,34 +1,6 @@
 import Intro from "@/components/Intro";
-import { db } from "@/lib/db";
 
-export const dynamic = 'force-dynamic';
-
-async function getUpcomingShows() {
-  try {
-    return await db.show.findMany({
-      where: {
-        isPublic: true,
-        date: {
-          gte: new Date(),
-        },
-      },
-      include: {
-        city: true,
-      },
-      orderBy: {
-        date: "asc",
-      },
-      take: 3,
-    });
-  } catch (error) {
-    console.error("Failed to fetch shows:", error);
-    return [];
-  }
-}
-
-export default async function HomePage() {
-  const upcomingShows = await getUpcomingShows();
-
+export default function HomePage() {
   return (
     <>
       <Intro />
@@ -42,44 +14,14 @@ export default async function HomePage() {
           </p>
         </section>
 
-        {upcomingShows.length > 0 && (
-          <section className="mb-16">
-            <h2 className="text-3xl font-bold text-center mb-8 text-rr-yellow">
-              Upcoming Shows
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {upcomingShows.map((show) => (
-                <div
-                  key={show.id}
-                  className="bg-rr-dark/80 backdrop-blur-sm border-2 border-rr-green/30 rounded-lg p-6 hover:border-rr-yellow/50 transition-all hover:shadow-lg hover:shadow-rr-green/20"
-                >
-                  <div className="text-sm text-rr-pink font-semibold mb-2">
-                    {new Date(show.date).toLocaleDateString("en-US", {
-                      month: "short",
-                      day: "numeric",
-                      year: "numeric",
-                    })}
-                  </div>
-                  <h3 className="text-xl font-bold mb-2 text-rr-green">{show.venue}</h3>
-                  <p className="text-rr-green/70 mb-4">
-                    {show.city.name}
-                    {show.city.state && `, ${show.city.state}`}
-                  </p>
-                  {show.ticketUrl && (
-                    <a
-                      href={show.ticketUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-rr-yellow hover:text-rr-pink font-semibold transition-colors"
-                    >
-                      Get Tickets →
-                    </a>
-                  )}
-                </div>
-              ))}
-            </div>
-          </section>
-        )}
+        <section className="mb-16">
+          <h2 className="text-3xl font-bold text-center mb-8 text-rr-yellow">
+            Coming Soon
+          </h2>
+          <p className="text-center text-rr-green/70 max-w-xl mx-auto">
+            Shows and tour dates will be announced here. Stay tuned!
+          </p>
+        </section>
       </div>
     </>
   );

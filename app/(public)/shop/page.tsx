@@ -1,77 +1,10 @@
-import { db } from "@/lib/db";
-import Image from "next/image";
-
-export const dynamic = 'force-dynamic';
-
-async function getProducts() {
-  try {
-    return await db.product.findMany({
-      where: {
-        isActive: true,
-      },
-      include: {
-        variants: true,
-      },
-      orderBy: {
-        createdAt: "desc",
-      },
-    });
-  } catch (error) {
-    console.error("Failed to fetch products:", error);
-    return [];
-  }
-}
-
-export default async function ShopPage() {
-  const products = await getProducts();
-
+export default function ShopPage() {
   return (
     <div className="container mx-auto px-4 py-12">
       <h1 className="text-4xl font-bold text-center mb-12 text-rr-yellow">Shop</h1>
-      {products.length === 0 ? (
-        <p className="text-center text-lg text-rr-green/70">
-          Merch coming soon! Check back later.
-        </p>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {products.map((product) => (
-            <div
-              key={product.id}
-              className="bg-rr-dark/80 backdrop-blur-sm border-2 border-rr-green/30 rounded-lg overflow-hidden hover:border-rr-pink/50 transition-all hover:shadow-lg hover:shadow-rr-green/20"
-            >
-              {product.images.length > 0 && (
-                <div className="relative w-full h-64">
-                  <Image
-                    src={product.images[0]}
-                    alt={product.name}
-                    fill
-                    className="object-cover"
-                  />
-                </div>
-              )}
-              <div className="p-6">
-                <h2 className="text-2xl font-bold mb-2 text-rr-green">{product.name}</h2>
-                {product.description && (
-                  <p className="text-rr-green/70 mb-4 text-sm">
-                    {product.description}
-                  </p>
-                )}
-                <div className="flex items-center justify-between">
-                  <span className="text-2xl font-bold text-rr-yellow">
-                    ${(product.price / 100).toFixed(2)}
-                  </span>
-                  <button
-                    disabled
-                    className="bg-rr-green/20 border border-rr-green text-rr-green px-6 py-2 rounded-lg hover:bg-rr-green/30 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    Coming Soon
-                  </button>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
+      <p className="text-center text-lg text-rr-green/70">
+        Merch coming soon! Check back later.
+      </p>
     </div>
   );
 }
