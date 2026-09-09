@@ -1,0 +1,214 @@
+/*
+	Ritchie Royale brand layer for Massively.
+
+	main.css is the stock HTML5 UP template with its palette rewritten as
+	var(--m-*) tokens. Everything band-specific lives here so the template
+	itself can be re-copied or upgraded without losing branding.
+*/
+
+:root {
+	/* Brand palette */
+	--rr-dark: #334143;
+	--rr-green: #b3ecc8;
+	--rr-yellow: #f6f792;
+	--rr-pink: #feabc3;
+
+	/* Hero behind the whole site. Any background-image value works here, so a
+	   gradient can stand in for a photo. */
+	--rr-bg-image: url("/images/hero-brick-wall.jpg");
+
+	/* Scrim between the hero photo and the overlay texture. The stock template
+	   assumes a dark image and barely tints it; the brick wall shot is bright,
+	   so the intro's white type needs a real wash to stay legible. */
+	--rr-bg-scrim: linear-gradient(
+		180deg,
+		rgba(24, 32, 33, 0.5) 0%,
+		rgba(24, 32, 33, 0.42) 45%,
+		rgba(24, 32, 33, 0.62) 100%
+	);
+
+	/* --- Massively token overrides: dark Ritchie Royale treatment --- */
+	--m-accent: var(--rr-yellow);
+
+	/* Surfaces */
+	--m-darker: #202a2b; /* behind everything */
+	--m-surface: #2b3739; /* #main content panel */
+	--m-bg-alt: #253032; /* #footer */
+
+	/* Body copy inside #main reads as neon green rather than near-black. */
+	--m-dark: var(--rr-green);
+	--m-muted: rgba(179, 236, 200, 0.72);
+	--m-muted-alt: rgba(179, 236, 200, 0.58);
+	--m-muted-light: rgba(179, 236, 200, 0.42);
+
+	--m-border: rgba(179, 236, 200, 0.18);
+	--m-border-alt: rgba(179, 236, 200, 0.3);
+
+	/* Text sitting directly on the hero image stays light. */
+	--m-light: #ffffff;
+}
+
+/* Tailwind's preflight ships from the root layout and paints a logo watermark
+   on <body>. The template's own #wrapper > .bg owns the background here. */
+body {
+	background-image: none !important;
+}
+
+/* Inverse elements that assumed a light surface ---------------------------- */
+
+input[type="submit"].primary,
+input[type="reset"].primary,
+input[type="button"].primary,
+button.primary,
+.button.primary {
+	background-color: var(--rr-green);
+	color: var(--m-darker) !important;
+}
+
+input[type="radio"]:checked + label:before,
+input[type="checkbox"]:checked + label:before {
+	background-color: var(--rr-green);
+	color: var(--m-darker);
+}
+
+#nav ul.links li.active {
+	background-color: var(--rr-yellow);
+}
+
+#nav ul.links li.active a {
+	color: var(--m-darker);
+}
+
+#navPanel {
+	background: var(--rr-dark);
+	color: var(--rr-green);
+}
+
+#navPanel .links li a {
+	color: var(--rr-green);
+}
+
+#navPanel .close {
+	color: var(--rr-yellow);
+}
+
+/* The template frames a text logo in a padded 5px white box. Ours is a square
+   photo of the double-R pin, so it fills the frame edge to edge. */
+#header .logo {
+	border-width: 2px !important;
+	border-color: rgba(179, 236, 200, 0.45);
+	padding: 0;
+	overflow: hidden;
+	line-height: 0;
+	/* #header is a 20rem column flex box with a 256px content area, so a
+	   taller child gets shrunk and then clipped by the overflow. */
+	max-width: 240px;
+	height: auto;
+	flex-shrink: 0;
+}
+
+#header .logo:hover {
+	border-color: var(--rr-green);
+}
+
+/* Headings pick up the brand yellow against the dark surface. */
+#main h1,
+#main h2,
+#main h3,
+#main h4 {
+	color: var(--rr-yellow);
+}
+
+#main a:hover {
+	color: var(--rr-pink) !important;
+}
+
+/* Carried over from the Milestones custom.css ----------------------------- */
+
+.break {
+	width: 70%;
+	margin: 3rem auto;
+}
+
+.shows p {
+	text-transform: uppercase;
+	font-size: 15px;
+	text-align: center;
+}
+
+#main > .shows {
+	padding-top: 3rem !important;
+}
+
+#main > .shows h1,
+#main > .photos h1 {
+	margin-bottom: 2em;
+}
+
+#main > .bio h1 {
+	margin-bottom: 0.3em !important;
+}
+
+#main > .bio p {
+	text-align: inherit;
+	font-size: 17px !important;
+	text-transform: none;
+}
+
+.text-center > p {
+	text-align: center !important;
+}
+
+/* Brand-coloured social icons on the press kit. */
+.epk-social .fa-spotify {
+	color: #1ed760;
+}
+
+.epk-social .fa-itunes-note {
+	color: #fa243c;
+}
+
+.epk-social .fa-instagram {
+	color: #c32aa3;
+}
+
+ul.epk-social li .icon:before {
+	font-size: 1.5rem !important;
+}
+
+/* Photo grid ------------------------------------------------------------- */
+
+.masonry-grid img {
+	cursor: pointer;
+}
+
+/* Lightbox for the photo grid (replaces the jQuery modal). */
+.rr-lightbox {
+	position: fixed;
+	inset: 0;
+	z-index: 10000;
+	border: 0;
+	padding: 0;
+	width: 100%;
+	height: 100%;
+	background: rgba(0, 0, 0, 0.85);
+	cursor: zoom-out;
+}
+
+.rr-lightbox img {
+	width: 100%;
+	height: 100%;
+	object-fit: contain;
+}
+
+@media (max-width: 767px) {
+	.masonry-grid > div {
+		display: block;
+		width: 100%;
+	}
+
+	.grid-wrapper > div {
+		grid-column: span 2;
+		grid-row: span 2;
+	}
+}

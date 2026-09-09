@@ -1,9 +1,35 @@
 import { PrismaClient } from "@prisma/client";
+import bcrypt from "bcryptjs";
 
 const prisma = new PrismaClient();
 
 async function main() {
   console.log("🌱 Seeding database...");
+
+  // Seed admin user
+  const adminEmail = process.env.ADMIN_EMAIL || "admin@ritchieroyale.com";
+  const adminPassword = process.env.ADMIN_PASSWORD || "changeme123";
+
+  const existingAdmin = await prisma.user.findUnique({
+    where: { email: adminEmail },
+  });
+
+  if (!existingAdmin) {
+    const passwordHash = await bcrypt.hash(adminPassword, 12);
+    await prisma.user.create({
+      data: {
+        id: "seed-admin",
+        email: adminEmail,
+        passwordHash,
+        role: "ADMIN",
+      },
+    });
+    console.log(`✓ Created admin user: ${adminEmail}`);
+    console.log(`  Password: ${adminPassword}`);
+    console.log(`  ⚠️  CHANGE THIS PASSWORD IMMEDIATELY!`);
+  } else {
+    console.log(`✓ Admin user already exists: ${adminEmail}`);
+  }
 
   // Seed cities
   const cities = [

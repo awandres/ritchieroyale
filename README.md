@@ -87,9 +87,27 @@ ritchieroyale/
 ├── lib/
 │   ├── db.ts               # Prisma client
 │   └── utils.ts            # Utilities
+├── packages/
+│   └── ui/                 # ⚠️ See note below
 └── prisma/
     └── schema.prisma       # Database schema
 ```
+
+### ⚠️ Note: packages/ui Directory
+
+The `packages/ui` directory contains a shadcn/ui component library (`@soundsgood/ui`) that was **accidentally created** during a coding session. It was originally intended for a different project (soundsgoodsoftware) but was built here by mistake.
+
+**Current status:** The package is functional and contains 20+ shadcn components (Button, Card, Dialog, etc.) with proper monorepo workspace configuration.
+
+**If revisiting this:**
+- The root `package.json` was renamed to `soundsgoodsoftware` and converted to use npm workspaces
+- The `tailwind.config.ts` was updated with shadcn CSS variable colors
+- Consider whether to:
+  1. **Keep it** - Rename package to `@ritchieroyale/ui` and integrate properly
+  2. **Remove it** - Delete `packages/` directory and revert `package.json` changes
+  3. **Extract it** - Move to the correct project
+
+See `packages/ui/README.md` for component documentation.
 
 ## Available Scripts
 

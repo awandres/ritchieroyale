@@ -22,6 +22,26 @@
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
-  "exclude": ["node_modules"]
+  // packages/* are type-checked by their own tsconfig; they map "@/*" to their
+  // own src/ and fail against the alias defined here.
+  "exclude": ["node_modules", "packages"]
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
