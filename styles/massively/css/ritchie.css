@@ -140,6 +140,38 @@ input[type="checkbox"]:checked + label:before {
 	border-color: var(--rr-green);
 }
 
+/*
+	Phone framing for the header and the opening banner. These two pull in
+	opposite directions on purpose: the banner bottom-aligns its title, so its
+	height is what sets the empty space above it and the stock value leaves too
+	much. Every other route starts at #header instead, where the logo otherwise
+	lands directly under the status bar with nothing above it.
+*/
+@media screen and (max-width: 980px) {
+	#intro {
+		min-height: 68vh;
+	}
+
+	/* Grown by the same amount it is padded, so the logo keeps its size rather
+	   than being squeezed into whatever is left. */
+	#header {
+		height: calc(14rem + 150px);
+		padding-top: calc(1.5rem + 150px);
+	}
+
+	/* The home page lays #header over the banner, which has the room already. */
+	#intro + #header {
+		height: 14rem;
+		padding-top: 1.5rem;
+	}
+}
+
+@media screen and (max-width: 736px) {
+	#intro {
+		min-height: 60vh;
+	}
+}
+
 /* Headings pick up the brand yellow against the dark surface. */
 #main h1,
 #main h2,
