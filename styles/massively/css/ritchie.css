@@ -141,17 +141,10 @@ input[type="checkbox"]:checked + label:before {
 }
 
 /*
-	Phone framing for the header and the opening banner. These two pull in
-	opposite directions on purpose: the banner bottom-aligns its title, so its
-	height is what sets the empty space above it and the stock value leaves too
-	much. Every other route starts at #header instead, where the logo otherwise
-	lands directly under the status bar with nothing above it.
+	Every route other than the home page starts at #header, which on a phone puts
+	the logo directly under the status bar with nothing above it.
 */
 @media screen and (max-width: 980px) {
-	#intro {
-		min-height: 68vh;
-	}
-
 	/* Grown by the same amount it is padded, so the logo keeps its size rather
 	   than being squeezed into whatever is left. */
 	#header {
@@ -163,12 +156,6 @@ input[type="checkbox"]:checked + label:before {
 	#intro + #header {
 		height: 14rem;
 		padding-top: 1.5rem;
-	}
-}
-
-@media screen and (max-width: 736px) {
-	#intro {
-		min-height: 60vh;
 	}
 }
 
