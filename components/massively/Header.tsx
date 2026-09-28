@@ -14,7 +14,9 @@ export default function Header() {
           height={siteConfig.logo.height}
           priority
           sizes="(max-width: 736px) 60vw, 320px"
-          style={{ width: "100%", height: "auto" }}
+          /* Height-first: the template gives #header a fixed height, so the logo
+             has to fit that rather than dictate its own. See ritchie.css. */
+          style={{ width: "auto", height: "100%" }}
         />
       </Link>
     </header>

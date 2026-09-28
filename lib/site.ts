@@ -44,6 +44,16 @@ export const siteConfig = {
     spotifyTrackId: "2nkoYA4paGa0P3nWHfNd14",
   },
 
+  /**
+   * Clip shown beside the single artwork on the Overview page. Separate from
+   * `single` because it promotes a different song. Shorts are vertical, which
+   * the embed needs to know to pick a 9:16 frame over 16:9.
+   */
+  promoVideo: {
+    id: "_QXSs9YPjpg",
+    vertical: true,
+  },
+
   /** Press-kit biography, one entry per paragraph. */
   bio: [
     "Ritchie Royale's Rock N' Roll Revue - coming soon to a town near you.",

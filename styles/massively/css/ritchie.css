@@ -17,6 +17,9 @@
 	   gradient can stand in for a photo. */
 	--rr-bg-image: url("/images/hero-brick-wall.jpg");
 
+	/* Portrait crop of the same shot, for phones. See the orientation query below. */
+	--rr-bg-image-portrait: url("/images/hero-brick-wall-portrait.jpg");
+
 	/* Scrim between the hero photo and the overlay texture. The stock template
 	   assumes a dark image and barely tints it; the brick wall shot is bright,
 	   so the intro's white type needs a real wash to stay legible. */
@@ -52,6 +55,19 @@
    on <body>. The template's own #wrapper > .bg owns the background here. */
 body {
 	background-image: none !important;
+}
+
+/*
+	The template sizes the hero to 175% of viewport height in portrait, which on a
+	phone magnifies a landscape photo until only a narrow strip of it is on
+	screen. Swap in a crop that is already the right shape and just let it cover.
+*/
+@media screen and (orientation: portrait) {
+	#wrapper > .bg {
+		background-image: url("/images/overlay.png"), var(--rr-bg-scrim),
+			var(--rr-bg-image-portrait);
+		background-size: auto, auto, cover;
+	}
 }
 
 /* Inverse elements that assumed a light surface ---------------------------- */
@@ -92,6 +108,15 @@ input[type="checkbox"]:checked + label:before {
 	color: var(--rr-yellow);
 }
 
+/*
+	The template only pads the bottom of the header, which is fine for a wordmark
+	but leaves our square logo flush against the top of the window on every route
+	that has no intro above it.
+*/
+#header {
+	padding-top: 1.5rem;
+}
+
 /* The template frames a text logo in a padded 5px white box. Ours is a square
    photo of the double-R pin, so it fills the frame edge to edge. */
 #header .logo {
@@ -100,10 +125,14 @@ input[type="checkbox"]:checked + label:before {
 	padding: 0;
 	overflow: hidden;
 	line-height: 0;
-	/* #header is a 20rem column flex box with a 256px content area, so a
-	   taller child gets shrunk and then clipped by the overflow. */
-	max-width: 240px;
-	height: auto;
+	/*
+		#header is a fixed-height column flex box that bottom-aligns its child, so
+		anything taller than the space left above the padding overhangs the top of
+		the page — which is where #header starts on every route but the home page.
+		Take the height from the header and let the square crop set the width.
+	*/
+	height: 100%;
+	width: auto;
 	flex-shrink: 0;
 }
 
@@ -174,6 +203,82 @@ input[type="checkbox"]:checked + label:before {
 
 ul.epk-social li .icon:before {
 	font-size: 1.5rem !important;
+}
+
+/* Video embeds ----------------------------------------------------------- */
+
+.rr-video {
+	aspect-ratio: 16 / 9;
+	/*
+		Mirrors the 2rem .image.fit leaves under the artwork. Stacked, this is the
+		player's gap before whatever follows; in a row, it lets the player's bottom
+		edge land level with the artwork's rather than with the artwork's margin.
+	*/
+	margin-bottom: 2rem;
+	position: relative;
+	overflow: hidden;
+	/* On the frame rather than the iframe, which is scaled and would shrink it. */
+	border-radius: 12px;
+}
+
+/*
+	Out of flow and sized in px so the player can be laid out larger than the
+	frame and scaled down into it — see the note in YouTubeEmbed. The percentage
+	fallbacks are what renders until that measurement lands.
+*/
+.rr-video iframe {
+	position: absolute;
+	top: 0;
+	left: 0;
+	display: block;
+	width: var(--rr-video-width, 100%);
+	height: var(--rr-video-height, 100%);
+	border: 0;
+	transform: scale(var(--rr-video-scale, 1));
+	transform-origin: top left;
+}
+
+/* Shorts are filmed vertically, so the player is a 9:16 frame. */
+.rr-video--vertical {
+	aspect-ratio: 9 / 16;
+	width: 72%;
+	margin: 0 auto;
+}
+
+/* Heading-plus-player stack that shares a row with the single artwork. */
+.rr-video-col {
+	display: flex;
+	flex-direction: column;
+	margin-bottom: 2rem;
+}
+
+.rr-video-col h4 {
+	text-align: center;
+}
+
+/* The stack owns the spacing below itself, so the player inside it should not. */
+.rr-video-col .rr-video {
+	margin-bottom: 0;
+}
+
+@media (min-width: 981px) {
+	/*
+		Square, so the stack is exactly as tall as the square artwork beside it.
+		Taking the height from a ratio rather than from the row keeps it definite,
+		which is what lets the player below flex into the leftover space; sizing it
+		from the row instead is circular, since the player is part of what makes
+		the row tall.
+	*/
+	.rr-video-col {
+		aspect-ratio: 1 / 1;
+	}
+
+	.rr-video-col .rr-video--vertical {
+		flex: 1;
+		min-height: 0;
+		/* Height now comes from the flex leftover; width follows from the ratio. */
+		width: auto;
+	}
 }
 
 /* Photo grid ------------------------------------------------------------- */

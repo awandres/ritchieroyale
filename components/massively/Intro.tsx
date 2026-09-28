@@ -10,7 +10,6 @@ export default function Intro() {
   return (
     <div id="intro">
       <h1>{siteConfig.name}</h1>
-      <p>{siteConfig.tagline}</p>
       <ul className="actions">
         <li>
           <ScrollyLink
