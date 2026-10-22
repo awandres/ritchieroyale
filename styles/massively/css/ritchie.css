@@ -300,6 +300,13 @@ ul.epk-social li .icon:before {
 	}
 }
 
+/* The /promo page gives the Short a column of its own, which at 72% of a
+   full-width post would run several screens tall on desktop. */
+.rr-promo-video {
+	max-width: 420px;
+	margin: 0 auto;
+}
+
 /* Photo grid ------------------------------------------------------------- */
 
 .masonry-grid img {

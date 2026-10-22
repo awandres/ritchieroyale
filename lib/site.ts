@@ -50,6 +50,7 @@ export const siteConfig = {
    * the embed needs to know to pick a 9:16 frame over 16:9.
    */
   promoVideo: {
+    title: "Seventh Heaven",
     id: "_QXSs9YPjpg",
     vertical: true,
   },
